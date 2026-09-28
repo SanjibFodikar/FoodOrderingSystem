@@ -1,0 +1,170 @@
+.sidebar {
+    width: 300px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    background: #111827 !important;
+    color: #fff;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    box-shadow: 4px 0 18px rgba(0, 0, 0, 0.25);
+
+    scrollbar-width: thin;
+    scrollbar-color: #374151 #111827;
+}
+
+/* Chrome / Edge scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: #111827;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #4b5563;
+}
+
+
+/* Admin profile section */
+.sidebar > div:first-child {
+    background: #151f32;
+}
+
+.sidebar img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+
+    border: 3px solid #374151;
+    transition: 0.3s ease;
+}
+
+.sidebar img:hover {
+    transform: scale(1.05);
+    border-color: #60a5fa;
+}
+
+.sidebar h4 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+
+/* All menu items */
+.sidebar .list-group-item,
+.sidebar > button {
+    background: transparent !important;
+    color: #d1d5db !important;
+
+    border: none !important;
+    border-radius: 0;
+
+    padding: 13px 20px;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    text-align: left;
+
+    transition: all 0.25s ease;
+}
+
+
+/* Hover */
+.sidebar .list-group-item:hover,
+.sidebar > button:hover {
+    background: #1e3a5f !important;
+    color: #ffffff !important;
+
+    padding-left: 25px;
+}
+
+
+/* Icons */
+.sidebar i {
+    font-size: 17px;
+    width: 22px;
+}
+
+
+/* Submenu */
+.sidebar .ps-4 {
+    background: #0f172a;
+
+    border-left: 3px solid #2563eb;
+
+    padding-left: 0.8rem !important;
+}
+
+
+/* Submenu links */
+.sidebar .ps-4 .list-group-item {
+    font-size: 14px;
+
+    padding: 10px 15px;
+
+    color: #9ca3af !important;
+}
+
+
+/* Submenu hover */
+.sidebar .ps-4 .list-group-item:hover {
+    background: #1e293b !important;
+    color: #ffffff !important;
+
+    padding-left: 20px;
+}
+
+
+/* Button focus */
+.sidebar button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+/* Active-looking effect */
+.sidebar .list-group-item:active,
+.sidebar > button:active {
+    background: #1e40af !important;
+}
+
+#page-content-wrapper-max{
+    margin-left: 300px;
+    transition: margin-left 0.3s ease;
+}
+
+#page-content-wrapper-min{
+    margin-left: 0px;
+    transition: margin-left 0.3s ease;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 250px;
+    }
+
+    .sidebar .list-group-item,
+    .sidebar > button {
+        padding: 12px 16px;
+    }
+
+    .sidebar h4 {
+        font-size: 18px;
+    }
+}
