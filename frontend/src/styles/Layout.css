@@ -1,0 +1,33 @@
+.navbar-brand:hover{
+    color: yellow;
+    transform: translateY(-5px);
+    transition: 0.5s ease;
+}
+
+.navbar-brand:hover i{
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0%{transform:rotate(0deg);}
+    25%{transform: rotate(5deg);}
+    50%{transform: rotate(-5deg);}
+    75%{transform: rotate(3deg);}
+    100%{transform: rotate(0deg);}
+}
+.navbar-nav .nav-item{
+border-radius: 5px;
+}
+.navbar-nav .nav-item:hover{
+    background-color:green;
+    color: #ffff;
+    font-weight: bold;
+    transform:translateY(-5px);
+    transition: 0.5s ease;
+    
+}
+
+
+.navbar-nav .nav-item:hover i{
+    animation: shake 0.3s ease;
+}

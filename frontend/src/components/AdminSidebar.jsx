@@ -43,15 +43,14 @@ const AdminSidebar = () => {
       {collapse.category && (
         <div className='ps-4'>
           <Link to="/add-category" className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Add Category</Link>
-          <Link className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-grid me-2"></i> Manage Category</Link>
+          <Link to="/manage-category" className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-grid me-2"></i> Manage Category</Link>
         </div>
       )}
 
-
       <button className='list-group-item list-group-item-action bg-dark text-white d-flex align-items-center' onClick={() => handleCollapse('item')}><i className='bi bi-pencil-square me-2'></i>Food Item <i className={`bi ${collapse.item ? 'bi-chevron-down' : 'bi-chevron-up'} ms-auto`}></i></button>
       <div style={{ display: `${collapse.item ? 'block' : 'none'}` }} className='ps-4'>
-        <Link className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Add Item</Link>
-        <Link className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-grid me-2"></i> Manage Item</Link>
+        <Link to={'/add-food'} className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Add Food</Link>
+        <Link to={'/manage-food'} className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-grid me-2"></i> Manage Food</Link>
       </div>
 
       <button className='list-group-item list-group-item-action bg-dark text-white d-flex align-items-center' onClick={() => handleCollapse('order')}><i className='bi bi-pencil-square me-2'></i>Food Orders <i className={`bi ${collapse.order ? 'bi-chevron-down' : 'bi-chevron-up'} ms-auto`}></i></button>

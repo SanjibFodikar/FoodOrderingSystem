@@ -1,38 +1,29 @@
-import PublicLayout from "../components/PublicLayout"
-import '../styles/home.css'
-import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import '../styles/home.css';
+import PublicLayout from '../components/PublicLayout';
 
-const Home = () => {
-  const [foods,setFoods]=useState([])
-  useEffect(()=>{
-        fetch(`http://127.0.0.1:8000/api/Foods_random/`)
-        .then(a=>a.json())
-        .then(data=>{
-          setFoods(data)
-        })
-  },[])
-  return (
-    <>
-      <PublicLayout>
-        <section className="hero" style={{ backgroundImage: "url('/images/home_final.png')" }}>
-          <div className="title">
-            <h1>Quick And Hot Food Delivered To You</h1>
-            <p className="lead">Craving Something Tasty ? Let's get To Your Door .</p>
-            <form action="/search-food" method="get" className="d-flex">
-              <input type="text" className="form-control" name="search-food" id="" placeholder="I Would Like To Eat"
-                style={{ borderTopRightRadius: '0px', borderBottomRightRadius: '0px' }}
-              />
-              <button className="btn btn-success" style={{ borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px', width: '150px' }}>Search</button>
-            </form>
-          </div>
-        </section>
+const SearchProduct = () => {
+    const query = new URLSearchParams(useLocation().search).get('search-food') || '';
+    const [foods, setFoods] = useState([])
+    useEffect(() => {
+        if (query) {
+            sendDataBackend(query)
+        }
+    }, [query])
 
-        <section className="mt-4">
-          <div className="container py-5">
-             <h4 className="text-center text-primary mb-2">Most Loved Dishes This Month <span className="btn btn-danger ms-1">Top Picks</span></h4>
-             <hr />
-             <div className="row gy-3">
+    const sendDataBackend =async (query) => {
+        let response = await fetch(`http://127.0.0.1:8000/api/Foods_search/?q=${query}`)
+        let data = await response.json()
+        setFoods(data)
+    }
+
+    return (
+        <PublicLayout>
+            <div className="container foodSearch">
+                <h3 className='text-primary text-center'>Results For : {query}</h3>
+                <hr />
+                <div className="row gy-3">
                     {foods.length> 0 ? (
                     foods.map((f) => {
                         return (<div className="col-12 col-sm-6 col-lg-4">
@@ -70,11 +61,9 @@ const Home = () => {
                     
 
                 </div>
-          </div>
-        </section>
-      </PublicLayout>
-    </>
-  )
+            </div>
+        </PublicLayout>
+    )
 }
 
-export default Home
+export default SearchProduct
