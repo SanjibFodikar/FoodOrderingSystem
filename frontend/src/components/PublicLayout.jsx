@@ -1,8 +1,28 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import '../styles/Layout.css';
 
-const PublicLayout = ({children}) => {
+const PublicLayout = ({ children }) => {
+  const navigate = useNavigate()
+  const [isLoggedin, setIsLogedIn] = useState(false)
+  const [userName, setUserName] = useState("")
+
+  let userId = localStorage.getItem('userId')
+  let name = localStorage.getItem('username')
+
+  const handleLogout = () => {
+    localStorage.removeItem('userId')
+    setIsLogedIn(false)
+    navigate('/user-login')
+  }
+
+  useEffect(() => {
+    if (userId) {
+      setIsLogedIn(true)
+      setUserName(name)
+    }
+  }, [userId])
+
   return (
     <>
       <div className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -34,17 +54,49 @@ const PublicLayout = ({children}) => {
                 <Link className="nav-link text-white" to="#"><i className="fa-solid fa-truck me-1"></i>Track</Link>
               </li>
 
-              <li className="nav-item">
-                <Link className="nav-link text-white" to={'/register'}><i className="fa-solid fa-user-plus me-1"></i>Register</Link>
-              </li>
+              {isLoggedin ? (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link text-white" to="/my-orders"><i class="bi bi-bag-check me-1"></i>My Order</Link>
+                  </li>
 
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="#"><i className="fa-solid fa-right-to-bracket me-1"></i>Login</Link>
-              </li>
+                  <li className="nav-item">
+                    <Link className="nav-link text-white" to="/cart"><i className="bi bi-cart me-1"></i>Cart</Link>
+                  </li>
 
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/admin-login"><i className="fa-solid fa-user-shield me-1"></i>Admin</Link>
-              </li>
+                  <li className="nav-item">
+                    <Link className="nav-link text-white" to="/admin-login"><i className="bi bi-heart-fill text-danger me-1"></i>Wishlist</Link>
+                  </li>
+
+
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="bi bi-person-circle me-1"></i>{userName}
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><Link to={'/profile'} class="dropdown-item" href="#"><i class="bi bi-person-fill me-1"></i>Profile</Link></li>
+                      <li><Link class="dropdown-item" to={'/change-password'}><i class="bi bi-key me-1"></i>Change Password</Link></li>
+                      <li><hr class="dropdown-divider" /></li>
+                      <li><button class="dropdown-item" onClick={handleLogout} href="#"><i class="bi bi-box-arrow-right me-1"></i>Logged out</button></li>
+                    </ul>
+                  </div>
+
+                </>
+              ) : (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link text-white" to={'/register'}><i className="fa-solid fa-user-plus me-1"></i>Register</Link>
+                  </li>
+
+                  <li className="nav-item">
+                    <Link className="nav-link text-white" to="/user-login"><i className="fa-solid fa-right-to-bracket me-1"></i>Login</Link>
+                  </li>
+
+                  <li className="nav-item">
+                    <Link className="nav-link text-white" to="/admin-login"><i className="fa-solid fa-user-shield me-1"></i>Admin</Link>
+                  </li>
+                </>
+              )}
 
             </ul>
           </div>

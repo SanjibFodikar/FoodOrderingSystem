@@ -1,9 +1,71 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import PublicLayout from '../components/PublicLayout'
+import { toast, ToastContainer } from 'react-toastify'
+import { Link, useNavigate } from 'react-router-dom'
+
 
 const UserRegistration = () => {
+    const navigate=useNavigate()
+    const [formData,setFormData]=useState({
+        name:'',
+        email:'',
+        mobile:'',
+        password:'',
+        confirm_password:''
+    })
+
+    const handleChange = (e) =>{
+         setFormData({
+            ...formData,
+            [e.target.name]:e.target.value
+         })
+    }
+
+    const handleSubmit =async (e)=>{
+        e.preventDefault()
+
+        const {name,email,mobile,password,confirm_password}=formData
+
+        if (password !== confirm_password) {
+            toast.error("Password and confirm password do not match")
+            return
+        }
+
+        try{
+
+          const response = await fetch('http://127.0.0.1:8000/api/userRegister/',{
+              method:'POST',
+              headers:{"Content-Type": "application/json"},
+              body:JSON.stringify({name,email,mobile,password})  
+          })
+
+          const data=await response.json()
+
+          if (response.status === 201) {
+             toast.success(data.message)
+             setFormData({
+                name:'',
+                email:'',
+                mobile:'',
+                password:'',
+                confirm_password:''
+             })
+             setTimeout(()=>{
+               navigate('/user-login')
+             },2000)
+          }else{
+            toast.error(data.message)
+          }
+
+        }catch(error){
+            console.log(error)
+        }
+
+    } 
+
     return (
         <PublicLayout>
+            <ToastContainer/>
             <div className="container mt-3 py-5">
                 <div className="row align-items-center justify-content-center g-4">
 
@@ -38,7 +100,7 @@ const UserRegistration = () => {
                             {/* Form */}
                             <div className="card-body p-4 p-md-5">
 
-                                <form>
+                                <form onSubmit={handleSubmit}>
 
                                     {/* Name */}
                                     <div className="mb-3">
@@ -54,7 +116,10 @@ const UserRegistration = () => {
                                             <input
                                                 type="text"
                                                 className="form-control"
+                                                name='name'
                                                 placeholder="Enter your full name"
+                                                value={formData.name}
+                                                onChange={handleChange}
                                                 required
                                             />
                                         </div>
@@ -75,6 +140,9 @@ const UserRegistration = () => {
                                                 type="email"
                                                 className="form-control"
                                                 placeholder="Enter your email"
+                                                name='email'
+                                                value={formData.email}
+                                                onChange={handleChange}
                                                 required
                                             />
                                         </div>
@@ -95,6 +163,9 @@ const UserRegistration = () => {
                                                 type="tel"
                                                 className="form-control"
                                                 placeholder="Enter your mobile number"
+                                                name='mobile'
+                                                value={formData.mobile}
+                                                onChange={handleChange}
                                                 required
                                             />
                                         </div>
@@ -115,6 +186,9 @@ const UserRegistration = () => {
                                                 type="password"
                                                 className="form-control"
                                                 placeholder="Create a password"
+                                                name='password'
+                                                value={formData.password}
+                                                onChange={handleChange}
                                                 required
                                             />
                                         </div>
@@ -135,6 +209,9 @@ const UserRegistration = () => {
                                                 type="password"
                                                 className="form-control"
                                                 placeholder="Confirm your password"
+                                                name='confirm_password'
+                                                value={formData.confirm_password}
+                                                onChange={handleChange}
                                                 required
                                             />
                                         </div>
@@ -154,12 +231,12 @@ const UserRegistration = () => {
                                 <div className="text-center mt-4">
                                     <small className="text-muted">
                                         Already have an account?
-                                        <a
-                                            href="#"
+                                        <Link
+                                            to="/user-login"
                                             className="text-decoration-none fw-semibold ms-1"
                                         >
                                             Login
-                                        </a>
+                                        </Link>
                                     </small>
                                 </div>
 
