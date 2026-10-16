@@ -32,11 +32,7 @@ const AdminSidebar = () => {
       </div>
 
       <div className='list-group list-group-flush'>
-        <Link className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-people me-2"></i> Reg Users</Link>
-      </div>
-
-      <div className='list-group list-group-flush'>
-        <Link className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-search me-2"></i> Search</Link>
+        <Link to={'/manage_user'} className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-people me-2"></i> Reg Users</Link>
       </div>
 
       <button className='list-group-item list-group-item-action bg-dark text-white d-flex align-items-center' onClick={() => handleCollapse('category')}><i className='bi bi-pencil-square me-2'></i> Food Category <i className={`bi ${collapse.category ? 'bi-chevron-down' : 'bi-chevron-up'} ms-auto`}></i></button>
@@ -56,17 +52,22 @@ const AdminSidebar = () => {
       <button className='list-group-item list-group-item-action bg-dark text-white d-flex align-items-center' onClick={() => handleCollapse('order')}><i className='bi bi-pencil-square me-2'></i>Food Orders <i className={`bi ${collapse.order ? 'bi-chevron-down' : 'bi-chevron-up'} ms-auto`}></i></button>
       {collapse.order && (
         <div className='ps-4'>
-          <Link className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Confirmed</Link>
-          <Link className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-grid me-2'></i> Being Prepared</Link>
-          <Link className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Food Pickup</Link>
-          <Link className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Delivered</Link>
-          <Link className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Canceld</Link>
-          <Link className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> All Orders</Link>
+          <Link to={'/order-not-confirmed'} className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i>Not Confirmed</Link>
+          <Link to={'/order-confirmed'} className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i>Confirmed</Link>
+          <Link to={'/being-prepared'} className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-grid me-2'></i> Being Prepared</Link>
+          <Link to={'/food-pickup'} className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Food Pickup</Link>
+          <Link to={'/food-delivered'} className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Delivered</Link>
+          <Link to={'/cancel-order'} className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> Cancelled</Link>
+          <Link to={'/all-orders'} className='list-group-item list-group-item-action bg-dark text-white'><i className='bi bi-plus me-2'></i> All Orders</Link>
         </div>
       )}
 
       <div className='list-group list-group-flush'>
-        <Link className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-star-half me-2"></i> B/W Date Reports</Link>
+        <Link to={'/order-report'} className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-star-half me-2"></i> D/W Date Reports</Link>
+      </div>
+
+      <div className='list-group list-group-flush'>
+        <Link to={'/search-order'} className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-search me-2"></i> Search</Link>
       </div>
 
       <div className='list-group list-group-flush'>
