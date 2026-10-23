@@ -43,7 +43,7 @@ const UserLogin = () => {
              localStorage.setItem('username',data.username)
 
              setTimeout(()=>{
-               navigate('/user-home')
+               navigate('/')
              },2000)
 
           }else{

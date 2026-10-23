@@ -28,7 +28,7 @@ const AdminSidebar = () => {
       </div>
 
       <div className='list-group list-group-flush'>
-        <Link className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-speedometer2 me-2"></i> Dashboard</Link>
+        <Link to={'/admin-dashboard'} className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-speedometer2 me-2"></i> Dashboard</Link>
       </div>
 
       <div className='list-group list-group-flush'>

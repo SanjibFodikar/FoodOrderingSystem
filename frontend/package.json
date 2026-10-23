@@ -17,6 +17,7 @@
     "react-medium-image-zoom": "^5.4.9",
     "react-router-dom": "^7.18.4",
     "react-toastify": "^11.1.0",
+    "recharts": "^3.10.1",
     "toastify": "^2.0.1"
   },
   "devDependencies": {
