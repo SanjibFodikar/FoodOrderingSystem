@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('admin_login_api/',views.admin_login_api),
+    path("dashboard_metrics/",views.dashboard_metrics),
     path('add_category/',views.add_category),
     path('category_list/',views.category_list),
     path('delete_category/<int:id>/',views.delete_category),
@@ -41,5 +42,8 @@ urlpatterns = [
     path('all_orders/',views.all_orders),
     path('order_between_dates/',views.order_between_dates),
     path('view_order_details/<str:order_number>/',views.view_order_details),
-    path('update_order_status/',views.update_order_status)
+    path('update_order_status/',views.update_order_status),
+    path('monthly_sales_summary/',views.monthly_sales_summary),
+    path('weekly_sales_summary/',views.weekly_sales_summary),
+    path('top_selling_foods/',views.top_selling_foods)
 ]

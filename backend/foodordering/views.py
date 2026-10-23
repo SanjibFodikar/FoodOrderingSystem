@@ -497,4 +497,146 @@ def order_search(request):
         orders=[]
     serializer=OrderSummarySerializer(orders,many=True)
     return Response(serializer.data)
-    
+
+from django.db.models import F,Sum
+from django.utils import timezone
+from datetime import timedelta
+
+def today_sales(today):
+    today_payment=PaymentDetails.objects.filter(payment_date=today)
+    today_order=Order.objects.filter(order_number__in=today_payment.values('order_number')).aggregate(
+            total=Sum(F('quantity') * F('food__item_price'))
+    )
+    return round(today_order['total'] or 0)
+
+def week_sales(today):
+    week_start=today-timedelta(days=today.weekday())
+    weekly_payment=PaymentDetails.objects.filter(payment_date__gte=week_start,payment_date__lte=today)
+    weekly_order = Order.objects.filter(
+        order_number__in=weekly_payment.values('order_number')
+    ).aggregate(
+        total=Sum(F('quantity') * F('food__item_price'))
+    )
+
+    return round(weekly_order['total'] or 0)
+
+def month_sales(today):
+    monthly_payment=PaymentDetails.objects.filter(payment_date__year=today.year,payment_date__month=today.month)
+    monthly_order = Order.objects.filter(
+            order_number__in=monthly_payment.values('order_number')
+        ).aggregate(
+            total=Sum(F('quantity') * F('food__item_price'))
+        )
+    return round(monthly_order['total'] or 0)
+
+def year_sales(today):
+    yearly_payment=PaymentDetails.objects.filter(payment_date__year=today.year)
+    yearly_order = Order.objects.filter(
+                order_number__in=yearly_payment.values('order_number')
+            ).aggregate(
+                total=Sum(F('quantity') * F('food__item_price'))
+            )
+    return round(yearly_order['total'] or 0)
+
+@api_view(['GET'])
+def dashboard_metrics(request):
+    today=timezone.localdate()
+   
+    return Response({
+       'total_orders':OrderAddress.objects.count(),
+       'new_orders':OrderAddress.objects.filter(order_final_status__isnull=True).count(),
+       'confirm_orders':OrderAddress.objects.filter(order_final_status="Order Confirmed").count(),
+       'food_preparing':OrderAddress.objects.filter(order_final_status="Food Being Prepared").count(),
+       'food_pickup':OrderAddress.objects.filter(order_final_status="Food Pickup").count(),
+       'food_delivered':OrderAddress.objects.filter(order_final_status="Food Delivered").count(),
+       'cancelled_orders':OrderAddress.objects.filter(order_final_status="Order Cancelled").count(),
+       'total_users':User.objects.all().count(),
+       'total_categories':Category.objects.all().count(),
+       'today_sales': today_sales(today),
+       'week_sales': week_sales(today),
+       'month_sales':month_sales(today),
+       'year_sales':year_sales(today)
+    })
+
+from collections import defaultdict
+from decimal import Decimal
+from django.db.models import F, Sum
+from django.db.models.functions import TruncMonth,TruncWeek
+
+@api_view(['GET'])
+def monthly_sales_summary(request):
+    orders = Order.objects.filter(
+        is_order_placed=True
+    ).values('order_number').annotate(
+        total_price=Sum(F('quantity') * F('food__item_price'))
+    )
+
+    order_price_map = {
+        o['order_number']: o['total_price'] or Decimal('0.00')
+        for o in orders
+    }
+
+    addresses = OrderAddress.objects.filter(
+        order_number__in=order_price_map.keys()
+    ).annotate(
+        month=TruncMonth('order_time')
+    ).values('month', 'order_number')
+
+    month_totals = defaultdict(lambda: Decimal('0.00'))
+
+    for addr in addresses:
+        label = addr['month'].strftime('%b')
+        month_totals[label] += order_price_map.get(
+            addr['order_number'], Decimal('0.00')
+        )
+
+    result = [
+        {'month': month, 'sales': total}
+        for month, total in month_totals.items()
+    ]
+
+    return Response(result)
+
+@api_view(['GET'])
+def top_selling_foods(request):
+    top_foods=Order.objects.filter(is_order_placed=True).values(
+        'food__item_name'
+    ).annotate(
+        total_sold=Sum('quantity')
+    ).order_by('-total_sold')[:5]
+    print(top_foods)
+    return Response(top_foods)
+
+@api_view(['GET'])
+def weekly_sales_summary(request):
+    orders = Order.objects.filter(
+        is_order_placed=True
+    ).values('order_number').annotate(
+        total_price=Sum(F('quantity') * F('food__item_price'))
+    )
+
+    order_price_map = {
+        o['order_number']: o['total_price'] or Decimal('0.00')
+        for o in orders
+    }
+
+    addresses = OrderAddress.objects.filter(
+        order_number__in=order_price_map.keys()
+    ).annotate(
+        week=TruncWeek('order_time')
+    ).values('week', 'order_number')
+
+    week_totals = defaultdict(lambda: Decimal('0.00'))
+
+    for addr in addresses:
+        label = addr['week'].strftime('%w')
+        week_totals[label] += order_price_map.get(
+            addr['order_number'], Decimal('0.00')
+        )
+
+    result = [
+        {'week': week, 'sales': total}
+        for week, total in week_totals.items()
+    ]
+
+    return Response(result)

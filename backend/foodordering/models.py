@@ -76,7 +76,7 @@ class PaymentDetails(models.Model):
     expiry_date=models.DateTimeField(auto_now_add=True,blank=True)
     cvv=models.CharField(max_length=5,null=True,blank=True)
     order_cancelled_by_user=models.BooleanField(default=False)
-
+    payment_date=models.DateField(auto_now_add=True)
     def __str__(self):
             return f"{self.order_number} - {self.payment_mode}"
 
