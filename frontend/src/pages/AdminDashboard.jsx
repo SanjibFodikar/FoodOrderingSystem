@@ -6,6 +6,7 @@ import { Icons, toast } from 'react-toastify'
 import { CSVLink } from 'react-csv'
 import TopProduct from './TopProduct'
 import WeeklySalesChart from '../components/WeeklySalesChart'
+import WeelkyUser from '../components/WeelkyUser'
 
 
 const AdminDashboard = () => {
@@ -96,6 +97,10 @@ const AdminDashboard = () => {
 
           <div className="col-12 col-md-6">
              <WeeklySalesChart/>
+          </div>
+
+          <div className="col-12 col-md-6">
+             <WeelkyUser/>
           </div>
         </div>
       </AdminLayout>

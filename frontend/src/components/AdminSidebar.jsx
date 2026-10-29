@@ -71,7 +71,7 @@ const AdminSidebar = () => {
       </div>
 
       <div className='list-group list-group-flush'>
-        <Link className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-star-half me-2"></i> Manage Reviews</Link>
+        <Link to={'/manage-reviews'} className='list-group-item list-group-item-action bg-dark text-white'><i className="bi bi-star-half me-2"></i> Manage Reviews</Link>
       </div>
 
 

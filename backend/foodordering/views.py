@@ -164,7 +164,7 @@ def userRegister(request):
         'message':'Account Created Successfully'
     },status=201)
 
-from django.db.models import Q
+from django.db.models import Q, Avg
 @api_view(['POST'])
 def userLogin(request):
     identifier=request.data.get('emailcont')
@@ -225,9 +225,7 @@ def cart_add(request):
 
 @api_view(['GET'])
 def all_cart(request,id):
-    print(id)
     order=Order.objects.filter(user_id=id,is_order_placed=False).select_related('food')
-    print(order)
     serializer=CartOrderSerializers(order,many=True)
     return Response(serializer.data)
 
@@ -488,6 +486,18 @@ def update_order_status(request):
     except :
         return Response({'error':'Invalid order name'},status=404)
 
+@api_view(['POST'])
+def cancel_order(request,order_number):
+    remark=request.data.get('remark')
+    address=OrderAddress.objects.get(order_number=order_number)
+    sample_order=Order.objects.filter(order_number=order_number).first()
+    FoodTracker.objects.create(
+       order=sample_order,remark=remark,status='Order Cancelled',order_cancelled_by_user=True
+    )
+    address.order_final_status='Order Cancelled'
+    address.save()
+    return Response({"message":'order cancelled successfully'},status=200)
+
 @api_view(['GET'])
 def order_search(request):
     query=request.GET.get('q','')
@@ -604,7 +614,6 @@ def top_selling_foods(request):
     ).annotate(
         total_sold=Sum('quantity')
     ).order_by('-total_sold')[:5]
-    print(top_foods)
     return Response(top_foods)
 
 @api_view(['GET'])
@@ -640,3 +649,173 @@ def weekly_sales_summary(request):
     ]
 
     return Response(result)
+
+from django.db.models import Count
+@api_view(['GET'])
+def weekly_total_users(request):
+    data=User.objects.annotate(
+        week=TruncWeek('reg_date')
+    ).values('week').annotate(
+        new_user=Count('id')
+    ).order_by('week')
+    # print(data)
+    result=[{
+        "week":entry['week'].strftime('week %W'),
+        "new_users":entry['new_user']
+    }
+    for entry in data
+    ]
+    # print(result)
+    return Response(result)
+
+@api_view(['POST'])
+def add_to_wishlist(request):
+    userId=request.data.get('userId')
+    foodId=request.data.get('foodId')
+    object,created=Wishlist.objects.get_or_create(
+        user_id=userId,
+        food_id=foodId
+    )
+    if created:
+        return Response({
+         'message':"Added To Wishlist."
+       },status=201)
+    else:
+        return Response({
+                 'message':"Already In Wishlist."
+               },status=200)
+
+@api_view(['DELETE'])
+def remove_to_wishlist(request):
+    userId=request.data.get('userId')
+    foodId=request.data.get('foodId')
+    try:
+        Wishlist.objects.get(user_id=userId,food_id=foodId).delete()
+        return Response({
+            'message':"Food deleted from wishlist."
+        },status=200)
+    except:
+       return Response({
+                   'message':"Food Items not found in wishlist"
+               },status=400)
+
+@api_view(['GET'])
+def get_data_from_wishlist(request,userId):
+    try:
+        wishlist=Wishlist.objects.filter(user_id=userId)
+        serializer=WishlistSerializer(wishlist,many=True)
+        return Response(serializer.data)
+    except:
+       return Response({
+                   'message':"Food Items not found in wishlist"
+               },status=400)
+
+@api_view(['GET'])
+def track_order(request,order_number):
+    order=Order.objects.filter(order_number=order_number,is_order_placed=True).first()
+    print(order)
+    if not order:
+        return Response({
+            'message':'Order Not Found'
+        },status=400)
+    tracking_data=FoodTracker.objects.filter(order=order)
+    print(tracking_data)
+    print(FoodTracker.objects.all())
+    serializer=FoodTrackingSerializer(tracking_data,many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def add_review(request,food_id):
+    userId=request.data.get('userId')
+    rating=request.data.get('rating')
+    comment=request.data.get('comment')
+    try:
+        user=User.objects.get(id=userId)
+        food=Food.objects.get(id=food_id)
+    except (User.DoesNotExist , Food.DoesNotExist):
+        return Response({
+            'message':'Food or User is not found'
+        },status=400)
+
+    Review.objects.create(
+                user=user,
+                food=food,
+                rating=rating,
+                comment=comment
+            )
+    return Response({
+        'message':'Review Submitted'
+    },status=201)
+
+
+@api_view(['GET'])
+def fetch_reviews(request,food_id):
+    reviews=Review.objects.filter(food_id=food_id)
+    serializer=ReviewSerializer(reviews,many=True)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def update_review(request,review_id):
+    try:
+        review=Review.objects.get(id=review_id)
+    except Review.DoesNotExist:
+        return Response({
+            'message':'Review Not Found'
+        },status=404)
+
+    serializer=ReviewSerializer(review,data=request.data,partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            'message':'Review Updated Successfully'
+        },status=200)
+    return Response({
+        'message':'Something Went Wrong',
+        'errors':serializer.errors
+    },status=400)
+
+@api_view(['DELETE'])
+def delete_review(request,review_id):
+    try:
+        review=Review.objects.get(id=review_id)
+        review.delete()
+        return Response({
+            'message':'Review Deleted Successfully'
+        },status=200)
+    except Review.DoesNotExist:
+        return Response({
+            'message':'Review Not Found'
+        },status=404)
+
+@api_view(['GET'])
+def food_rating_summary(request,food_id):
+    reviews=Review.objects.filter(food_id=food_id)
+    rating_summary=reviews.values('rating').annotate(count=Count('rating')).order_by('-rating')
+    rating_avg=reviews.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0
+    total_reviews=reviews.count()
+    return Response({
+        'rating_summary':{entry['rating']:entry['count'] for entry in rating_summary},
+        'average_rating':round(rating_avg,2),
+        'total_reviews':total_reviews
+    },status=200)
+
+
+@api_view(['GET'])
+def all_reviews(request):
+    reviews=Review.objects.all().select_related('user', 'food').order_by('-id')
+    serializer=ReviewSerializer(reviews,many=True)
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+def delete_review(request,review_id):
+    try:
+        review=Review.objects.get(id=review_id)
+        review.delete()
+        return Response({
+            'message':'Review Deleted Successfully'
+        },status=200)
+    except Review.DoesNotExist:
+        return Response({
+            'message':'Review Not Found'
+        },status=404)

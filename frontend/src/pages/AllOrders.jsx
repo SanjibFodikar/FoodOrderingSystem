@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import AdminLayout from '../components/AdminLayout';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { data,Link } from 'react-router-dom';
+import { data,Link,useNavigate } from 'react-router-dom';
 const AllOrders = () => {
     const [orders, setOrders] = useState([])
-
+    const navigate = useNavigate()
     useEffect(() => {
         const username = localStorage.getItem('admin_userId')
         if (!username) {

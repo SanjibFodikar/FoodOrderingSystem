@@ -83,3 +83,20 @@ class FoodTrackingSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodTracker
         fields=['remark','status','order_cancelled_by_user','status_date']
+
+class WishlistSerializer(serializers.ModelSerializer):
+    item_name=serializers.CharField(source='food.item_name')
+    item_price=serializers.DecimalField(source='food.item_price',max_digits=10,decimal_places=2)
+    image=serializers.ImageField(source='food.image')
+    item_description=serializers.CharField(source='food.item_description')
+    is_available=serializers.BooleanField(source='food.is_available')
+    class Meta:
+        model = Wishlist
+        fields=['food_id','item_name','item_price','image','item_description','is_available']
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user_name=serializers.CharField(source='user.full_name')
+    food_name=serializers.CharField(source='food.item_name',read_only=True)
+    class Meta:
+        model = Review
+        fields=['id','user','user_name','food','food_name','rating','comment','created_at']

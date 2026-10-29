@@ -101,4 +101,5 @@ class Wishlist(models.Model):
         return f"{self.user} - {self.food}"
 
 
-    
+
+     

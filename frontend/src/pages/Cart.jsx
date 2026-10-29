@@ -3,12 +3,14 @@ import PublicLayout from '../components/PublicLayout';
 import { useParams, useNavigate, Link, useActionData } from 'react-router-dom';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
+import { useCart } from '../context/CartContext';
 import { ToastContainer, toast } from 'react-toastify';
 
 const Cart = () => {
   const navigate = useNavigate()
   const [cartItems, setCartItems] = useState([])
   const [grandTotal, setGrandToatal] = useState(0)
+  const {setCartCount}=useCart()
   const userId = localStorage.getItem('userId')
   useEffect(() => {
     if (!userId) {
@@ -68,8 +70,10 @@ const Cart = () => {
         method: 'DELETE'
       })
       let data = await response.json()
+  
       if (response.status === 200) {
         toast.success(data.message)
+        setCartCount(data.length)
         fetchCardItems()
       } else {
         toast.error(data.message)

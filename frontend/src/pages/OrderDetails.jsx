@@ -4,6 +4,7 @@ import { useParams, useNavigate, Link, useActionData } from 'react-router-dom';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import { ToastContainer, toast } from 'react-toastify';
+import CancelOrderModals from '../components/CancelOrderModals';
 
 const OrderDetails = () => {
     const { order_number } = useParams()
@@ -12,6 +13,10 @@ const OrderDetails = () => {
     const [orderItems, setOrderItems] = useState([])
     const [orderAddress, setOrderAddress] = useState(null)
     const [total, setTotal] = useState(0)
+    const [showCancelModal, setshowCancelModal] = useState(false)
+
+    const handleCloseModal = () => setshowCancelModal(false)
+
     useEffect(() => {
         if (!userId) {
             navigate('/user-login')
@@ -241,13 +246,31 @@ const OrderDetails = () => {
                                                 Download Invoice
                                             </a>
 
-                                            <button
-                                                type="button"
-                                                className="btn btn-outline-danger rounded-3 py-2 fw-semibold"
-                                            >
-                                                <i className="bi bi-x-circle me-2"></i>
-                                                Cancel Order
-                                            </button>
+                                            {orderAddress && (
+                                                <>
+                                                    <CancelOrderModals
+                                                        show={showCancelModal}
+                                                        handleClose={handleCloseModal}
+                                                        order_number={order_number}
+                                                        payment_mode={orderAddress.payment_mode}
+                                                    />
+                                                    {orderAddress.order_final_status === null ||
+                                                        orderAddress.order_final_status === 'Order Confirmed' ||
+                                                        orderAddress.order_final_status === 'Food Being Prepared' ?
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-danger rounded-3 py-2 fw-semibold"
+                                                            onClick={() => setshowCancelModal(true)}
+                                                        >
+                                                            <i className="fas fa-times-circle me-2"></i>
+                                                            Cancel Order
+                                                        </button>
+                                                        :
+
+                                                        <p className='text-danger mt-2'>Order cannot be cancelled (Current Status {orderAddress.order_final_status})</p>
+                                                    }
+                                                </>
+                                            )}
                                         </div>
 
                                     </div>

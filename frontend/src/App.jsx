@@ -15,6 +15,7 @@ import FoodDetails from './pages/FoodDetails'
 import Cart from './pages/Cart'
 import PaymentPage from './pages/PaymentPage'
 import MyOrders from './pages/MyOrders'
+import ManageReviews from './pages/ManageReviews'
 import OrderDetails from './pages/OrderDetails'
 import Profile from './pages/Profile'
 import ChangePassword from './pages/ChangePassword'
@@ -31,11 +32,18 @@ import SearchOrder from './pages/SearchOrder'
 import EditCategory from './pages/EditCategory'
 import EditFood from './pages/EditFood'
 import ManageUser from './pages/ManageUser'
+import { CartProvider } from './context/CartContext'
+import { WishlistProvider } from './context/WishlistContext'
+import FoodMenu from './pages/FoodMenu'
+import Wishlist from './pages/Wishlist'
+import TrackOrder from './pages/TrackOrder'
 
 function App() {
 
   return (
     <>
+    <WishlistProvider>
+    <CartProvider>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home/>}></Route>
@@ -47,6 +55,7 @@ function App() {
           <Route path='/add-food' element={<AddFood/>}></Route>
           <Route path='/admin-edit-food/:id' element={<EditFood/>}></Route>
           <Route path='/manage-food' element={<ManageFood/>}></Route>
+          <Route path='/manage-reviews' element={<ManageReviews/>}></Route>
           <Route path='/search-food' element={<SearchProduct/>}></Route>
           <Route path='/register' element={<UserRegistration/>}></Route>
           <Route path='/user-login' element={<UserLogin/>}></Route>
@@ -68,8 +77,14 @@ function App() {
           <Route path='/cancel-order' element={<CancelledOrders/>}></Route>
           <Route path='/all-orders' element={<AllOrders/>}></Route>
           <Route path='/order-report' element={<OrderReport/>}></Route>
+          <Route path='/food-menu' element={<FoodMenu/>}></Route>
+          <Route path='/wishlist' element={<Wishlist/>}></Route>
+          <Route path='/track' element={<TrackOrder/>}></Route>
+          <Route path='/track-order/:order_number' element={<TrackOrder/>}></Route>
         </Routes>
       </BrowserRouter>
+      </CartProvider>
+      </WishlistProvider>
     </>
   )
 }

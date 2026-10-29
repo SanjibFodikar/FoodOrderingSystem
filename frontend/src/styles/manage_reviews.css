@@ -1,0 +1,79 @@
+.reviews-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1rem;
+    border: 1px solid #e4eaf1;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(24, 43, 74, 0.08);
+    -webkit-overflow-scrolling: touch;
+}
+
+.reviews-table {
+    min-width: 760px;
+    margin-bottom: 0;
+    color: #273449;
+}
+
+.reviews-table thead th {
+    padding: 0.95rem 1rem;
+    border: 0;
+    background: linear-gradient(110deg, #253b60, #345783);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.035em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.reviews-table tbody td {
+    padding: 0.9rem 1rem;
+    border-color: #edf1f6;
+    vertical-align: middle;
+}
+
+.reviews-table tbody tr:nth-child(even) > * {
+    --bs-table-bg-type: #f7f9fc;
+}
+
+.reviews-table tbody tr:hover > * {
+    --bs-table-bg-state: #edf5ff;
+}
+
+.reviews-table tbody td:nth-child(1),
+.reviews-table tbody td:nth-child(4),
+.reviews-table tbody td:nth-child(6),
+.reviews-table tbody td:nth-child(7) {
+    white-space: nowrap;
+}
+
+.reviews-table tbody td:nth-child(5) {
+    min-width: 220px;
+    max-width: 360px;
+    overflow-wrap: anywhere;
+    color: #58677c;
+}
+
+.reviews-table .btn-danger {
+    border-radius: 7px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.reviews-empty {
+    padding: 2rem !important;
+    color: #6b7789;
+}
+
+@media (max-width: 576px) {
+    .reviews-table-wrap {
+        margin-top: 0.75rem;
+        border-radius: 9px;
+    }
+
+    .reviews-table thead th,
+    .reviews-table tbody td {
+        padding: 0.75rem;
+    }
+}

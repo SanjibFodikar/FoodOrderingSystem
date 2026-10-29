@@ -24,9 +24,24 @@ border-radius: 5px;
     font-weight: bold;
     transform:translateY(-5px);
     transition: 0.5s ease;
-    
+    border-radius: 5px;
 }
 
+.active-nav-item{
+    background-color:green;
+    color: #ffff;
+    font-weight: bold;
+    transform:translateY(-5px);
+    transition: 0.5s ease;
+    border-radius: 10px;
+}
+.active-dropdown{
+    background-color:green;
+    color: #ffff;
+    font-weight: bold;
+    transform:translateY(-5px);
+    transition: 0.5s ease;
+}
 
 .navbar-nav .nav-item:hover i{
     animation: shake 0.3s ease;

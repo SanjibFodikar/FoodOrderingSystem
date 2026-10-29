@@ -23,6 +23,19 @@ const MyOrders = () => {
             })
 
     }, [userId])
+
+    const getStatusBadge = (status) =>{
+        switch (status) {
+            case 'Order Confirmed': return 'info'
+            case 'Food Being Prepared': return 'warning'
+            case 'Food Pickup': return 'primary'
+            case 'Food Delivered': return 'success'
+            case 'Order Cancelled': return 'danger'
+            default:
+               return 'secondary'
+        }
+    }
+
     return (
         <PublicLayout>
             <div className="container" style={{ marginTop: '100px' }}>
@@ -66,7 +79,7 @@ const MyOrders = () => {
                                                 {new Date(order.order_time).toLocaleDateString('en-IN')}
                                             </p>
 
-                                            <span className="badge rounded-pill bg-success-subtle text-success px-3 py-2">
+                                            <span className={`badge bg-${getStatusBadge(order.order_final_status)}`}>
                                                 <i className="bi bi-check-circle-fill me-1"></i>
                                                 {order.order_final_status}
                                             </span>
@@ -77,7 +90,7 @@ const MyOrders = () => {
                                             <div className="d-flex flex-wrap gap-2">
 
                                                 <Link
-                                                    to={'#'}
+                                                    to={`/track-order/${order.order_number}`}
                                                     className="btn btn-outline-primary rounded-pill px-3"
                                                 >
                                                     <i className="bi bi-geo-alt me-1"></i>

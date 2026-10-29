@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import '../styles/Layout.css';
+import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 
 const PublicLayout = ({ children }) => {
   const navigate = useNavigate()
   const [isLoggedin, setIsLogedIn] = useState(false)
   const [userName, setUserName] = useState("")
+  const { cartCount, setCartCount } = useCart();
+  const { WishlistCount, setWishlistCount } = useWishlist();
 
   let userId = localStorage.getItem('userId')
   let name = localStorage.getItem('username')
@@ -13,13 +17,29 @@ const PublicLayout = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem('userId')
     setIsLogedIn(false)
+    setCartCount(0)
+    setWishlistCount(0)
     navigate('/user-login')
+  }
+
+  const fetchCartCount =async ()=>{
+    const response=await fetch(`http://127.0.0.1:8000/api/all_cart/${userId}/`)
+    const data=await response.json()
+    setCartCount(data.length)
+  }
+
+  const fetchWishlistCount =async ()=>{
+    const response=await fetch(`http://127.0.0.1:8000/api/wishlist/${userId}/`)
+    const data=await response.json()
+    setWishlistCount(data.length)
   }
 
   useEffect(() => {
     if (userId) {
       setIsLogedIn(true)
       setUserName(name)
+      fetchCartCount()
+      fetchWishlistCount()
     }
   }, [userId])
 
@@ -42,30 +62,36 @@ const PublicLayout = ({ children }) => {
           <div className="collapse navbar-collapse" id="navbtn">
             <ul className="navbar-nav ms-auto">
 
-              <li className="nav-item">
+              <li className={`nav-item ${location.pathname === '/' ? 'active-nav-item' : ''}`}>
                 <Link className="nav-link text-white" to="/"><i className="fa-solid fa-home me-1"></i>Home</Link>
               </li>
 
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="#"><i className="fa-solid fa-utensils me-1"></i>Menu</Link>
+              <li className={`nav-item ${location.pathname === '/food-menu' ? 'active-nav-item' : ''}`}>
+                <Link className="nav-link text-white" to="/food-menu"><i className="fa-solid fa-utensils me-1"></i>Menu</Link>
               </li>
 
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="#"><i className="fa-solid fa-truck me-1"></i>Track</Link>
+              <li className={`nav-item ${location.pathname === '/track' ? 'active-nav-item' : ''}`}>
+                <Link className="nav-link text-white" to={'/track'}><i className="fa-solid fa-truck me-1"></i>Track</Link>
               </li>
 
               {isLoggedin ? (
                 <>
-                  <li className="nav-item">
+                  <li className={`nav-item ${location.pathname === '/my-orders' ? 'active-nav-item' : ''}`}>
+
                     <Link className="nav-link text-white" to="/my-orders"><i class="bi bi-bag-check me-1"></i>My Order</Link>
                   </li>
 
-                  <li className="nav-item">
-                    <Link className="nav-link text-white" to="/cart"><i className="bi bi-cart me-1"></i>Cart</Link>
+                  <li className={`nav-item ${location.pathname === '/cart' ? 'active-nav-item' : ''}`}>
+                    <Link className="nav-link text-white" to="/cart">
+                    <i className="bi bi-cart me-1"></i>Cart
+                    <span className='ms-1 text-white fw-bold'>({cartCount>0 ? cartCount : 0})</span>
+                    </Link>
                   </li>
 
-                  <li className="nav-item">
-                    <Link className="nav-link text-white" to="/admin-login"><i className="bi bi-heart-fill text-danger me-1"></i>Wishlist</Link>
+                  <li className={`nav-item ${location.pathname === '/wishlist' ? 'active-nav-item' : ''}`}>
+                    <Link className="nav-link text-white" to="/wishlist"><i className="bi bi-heart-fill text-danger me-1"></i>Wishlist
+                    <span className='ms-1 text-white fw-bold'>({WishlistCount>0 ? WishlistCount : 0})</span>
+                    </Link>
                   </li>
 
 
@@ -74,8 +100,8 @@ const PublicLayout = ({ children }) => {
                       <i class="bi bi-person-circle me-1"></i>{userName}
                     </button>
                     <ul class="dropdown-menu">
-                      <li><Link to={'/profile'} class="dropdown-item" href="#"><i class="bi bi-person-fill me-1"></i>Profile</Link></li>
-                      <li><Link class="dropdown-item" to={'/change-password'}><i class="bi bi-key me-1"></i>Change Password</Link></li>
+                      <li><Link to={'/profile'} class={`dropdown-item ${location.pathname === '/profile' ? 'active-dropdown' : ''}`} ><i class="bi bi-person-fill me-1"></i>Profile</Link></li>
+                      <li><Link class={`dropdown-item ${location.pathname === '/change-password' ? 'active-dropdown' : ''}`} to={'/change-password'}><i class="bi bi-key me-1"></i>Change Password</Link></li>
                       <li><hr class="dropdown-divider" /></li>
                       <li><button class="dropdown-item" onClick={handleLogout} href="#"><i class="bi bi-box-arrow-right me-1"></i>Logged out</button></li>
                     </ul>
