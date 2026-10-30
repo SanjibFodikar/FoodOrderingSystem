@@ -45,7 +45,7 @@ const PublicLayout = ({ children }) => {
 
   return (
     <>
-      <div className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div className="container">
           <Link to='/' className='navbar-brand fw-bold'><i className="fa-solid fa-utensils me-1"></i> Food Ordering System</Link>
           <button

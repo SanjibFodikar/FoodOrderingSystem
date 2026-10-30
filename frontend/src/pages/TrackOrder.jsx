@@ -70,11 +70,11 @@ const TrackOrder = () => {
                             <i className="fas fa-stream me-1"></i> Order Status Timeline
                         </h5>
 
-                        <div className="d-flex  justify-content-between flex-fill position-relative">
+                        <div className="d-flex justify-content-between flex-fill position-relative timeline-container">
                             <div className="timeline-line"></div>
                             {TrackingData.map((item, index) => {
                                 return (
-                                    <div key={index}>
+                                    <div className="timeline-step" key={index}>
                                         <div className={`icon text-white ${bg_apply(item.status)} mx-auto`}>
                                             <i className="fas fa-check"></i>
                                         </div>

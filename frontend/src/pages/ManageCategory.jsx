@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { data, Link, useNavigate } from 'react-router-dom';
 import { CSVLink } from 'react-csv'
-import { toast,ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 const ManageCategory = () => {
   const navigate = useNavigate()
+  const [currentPage, setCurrentPage] = useState(1)
+  const foodPerCategory = 5
+
   useEffect(() => {
     const username = localStorage.getItem('admin_userId')
     if (!username) {
@@ -38,35 +41,40 @@ const ManageCategory = () => {
     setTaskList(filterdData)
   }
 
-  const handleDelete =async (id) => {
+  const handleDelete = async (id) => {
     const confirmation = window.confirm("Are you sure to delete Category")
     if (confirmation) {
-     let response=await fetch(`http://127.0.0.1:8000/api/delete_category/${id}/`,{
-        method:'DELETE'
+      let response = await fetch(`http://127.0.0.1:8000/api/delete_category/${id}/`, {
+        method: 'DELETE'
       })
-      let data=await response.json()  
+      let data = await response.json()
       if (response.status === 200) {
-             toast.success("Category deleted successfully")
-             setTimeout(()=>{
-                window.location.reload();
-             },500)
-          }else{
-             toast.error("something went wrong")
-          }
-        }
+        toast.success("Category deleted successfully")
+        setTimeout(() => {
+          window.location.reload();
+        }, 500)
+      } else {
+        toast.error("something went wrong")
+      }
     }
-  
+  }
+
+  let LastPageIndex = foodPerCategory * currentPage
+  let firstIndex = LastPageIndex - foodPerCategory
+  let totalPage = Math.ceil(TaskList.length / foodPerCategory)
+  let currentCategories = TaskList.slice(firstIndex, LastPageIndex);
+
 
   return (
     <AdminLayout>
-      <ToastContainer/>
+      <ToastContainer />
       <div className='container'>
         <h3 className='text-center text-primary'><i className="bi bi-list-check me-2"></i>Manage Food Category</h3>
         <h5 className='text-end'><i className="bi bi-database me-1"></i> Total Categories
           <span className='ms-2 badge bg-success'>{TaskList.length || 0}</span>
         </h5>
-        <div className="mb-3 d-flex justify-content-between">
-          <input type="text" onChange={(e) => handleSearch(e.target.value)} style={{ width: '50%' }} className='mb-2 p-2' placeholder='Search Category' />
+        <div className="mb-3 d-flex flex-wrap gap-2 justify-content-between">
+          <input type="text" onChange={(e) => handleSearch(e.target.value)} className='mb-2 p-2 flex-grow-1 category-search' placeholder='Search Category' />
           <CSVLink data={TaskList} filename={'category_list.csv'} className='btn btn-success pb-0'><i className="bi bi-filetype-csv me-2"></i> Export To CSV</CSVLink>
         </div>
 
@@ -80,7 +88,7 @@ const ManageCategory = () => {
             </tr>
           </thead>
           <tbody>
-            {TaskList.map((data, index) => {
+            {currentCategories.map((data, index) => {
               return (
                 <tr key={data.id}>
                   <td>{index + 1}</td>
@@ -102,6 +110,16 @@ const ManageCategory = () => {
             })}
           </tbody>
         </table>
+
+        {Array.from({ length: totalPage }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            className={`btn ${currentPage === page ? 'btn-primary' : 'btn-outline-primary'} me-2`}
+            onClick={() => setCurrentPage(page)}
+          >
+            {page}
+          </button>
+        ))}
       </div>
     </AdminLayout>
   )

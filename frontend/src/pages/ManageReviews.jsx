@@ -10,6 +10,7 @@ const ManageReviews = () => {
     const [reviews, setReviews] = useState([])
     const navigate = useNavigate()
 
+
     useEffect(() => {
         const username = localStorage.getItem('admin_userId')
         if (!username) {
@@ -82,7 +83,9 @@ const ManageReviews = () => {
                                         <td>{index+1}</td>
                                         <td>{review.food_name}</td>
                                         <td>{review.user_name}</td>
-                                        <td>{review.rating}</td>
+                                        <td>{[...Array(5)].map((_,i)=>{
+                                            return <i key={i} className={`fa-star text-warning ${i < review.rating ? 'fas' : 'far'}`}></i>
+                                        })}</td>
                                         <td>{review.comment}</td>
                                         <td>{new Date (review.created_at).toLocaleString()}</td>
                                         <td><button onClick={() => deleteReview(review.id)} className='btn btn-danger'><i className='bi bi-trash me-1'></i>Delete</button></td>

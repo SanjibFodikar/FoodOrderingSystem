@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import AdminLayout from '../components/AdminLayout';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { data,Link } from 'react-router-dom';
+import { data, Link } from 'react-router-dom';
 const FoodDelivered = () => {
     const [orders, setOrders] = useState([])
 
@@ -13,10 +13,10 @@ const FoodDelivered = () => {
         }
 
         fetch('http://127.0.0.1:8000/api/food_delivered/')
-        .then(a=>a.json())
-        .then(data=>{
-           setOrders(data)
-        })
+            .then(a => a.json())
+            .then(data => {
+                setOrders(data)
+            })
     }, [])
 
     return (
@@ -30,31 +30,31 @@ const FoodDelivered = () => {
 
                 <table className='table table-striped'>
                     <thead className='table-dark'>
-                         <tr>
+                        <tr>
                             <th>S.no</th>
                             <th>Order Number</th>
                             <th>Order Date</th>
                             <th>Action</th>
-                         </tr>
+                        </tr>
                     </thead>
                     <tbody>
-                        {orders.length == 0 ?(
+                        {orders.length == 0 ? (
                             <tr>
                                 <td colSpan={4} className='text-center'><strong>No Data Found</strong></td>
-                            </tr> 
+                            </tr>
 
-                        ) :(
-                            orders.map((order,index)=>{
+                        ) : (
+                            orders.map((order, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{index+1}</td>
+                                        <td>{index + 1}</td>
                                         <td>{order.order_number}</td>
-                                        <td>{new Date (order.order_time).toLocaleString()}</td>
-                                        <td><a href="#" className='btn btn-primary'><i className='bi bi-pencil-square me-1'></i>Edit</a></td>
+                                        <td>{new Date(order.order_time).toLocaleString()}</td>
+                                        <td><Link to={`/admin-view-order-details/${order.order_number}`} className='btn btn-primary'><i className='bi bi-eye me-1'></i>View Details </Link></td>
                                     </tr>
                                 )
                             })
-                           
+
                         )}
                     </tbody>
                 </table>

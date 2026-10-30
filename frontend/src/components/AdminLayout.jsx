@@ -45,7 +45,8 @@ const AdminLayout = ({ children }) => {
 
   return (
     <div className='d-flex'>
-      {openSidebar && <AdminSidebar />}
+      <AdminSidebar className={openSidebar ? 'sidebar-open' : 'sidebar-closed'} />
+      {openSidebar && <button className="sidebar-backdrop d-md-none" aria-label="Close navigation" onClick={toogleSidebar} />}
       <div id={openSidebar ? 'page-content-wrapper-max' : 'page-content-wrapper-min'} style={{ width: '100%' }}>
         <AdminHeader toogleSidebar={toogleSidebar} openSidebar={openSidebar} newOrder={newOrder} />
         <div className="container-fluid mt-4">

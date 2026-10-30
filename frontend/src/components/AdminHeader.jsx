@@ -8,14 +8,12 @@ const AdminHeader = ({toogleSidebar,openSidebar,newOrder}) => {
     navigate('/admin-login')
   }
   return (
-    <nav className='navbar navbar-expand-lg bg-white navbar-light border-bottom pt-2'>
+    <nav className='navbar bg-white navbar-light border-bottom pt-2'>
       <button className="btn btn-dark ms-1" onClick={toogleSidebar}><i className={`bi ${openSidebar  ? 'bi-chevron-left' : 'bi-chevron-right'}`}></i></button>
       <div className="container">
         
         <span className='navbar-brand fw-semibold'><i className="bi bi-egg-fried me-2"></i>Food Ordering System</span>
-        <button className='navbar-toggler'><i className="bi bi-list"></i></button>
-
-        <div className='collapse navbar-collapse'>
+        <div className='d-flex ms-auto'>
             <ul className='navbar-nav ms-auto align-items-center gap-2'>
               <li className='nav-item position-relative'>
                 <button className='btn btn-outline-success position-relative' onClick={()=>{

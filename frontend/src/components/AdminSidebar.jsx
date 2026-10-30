@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ className = '' }) => {
   const [collapse, setCollapse] = useState({
     'category': false,
     'item': false,
@@ -21,7 +21,7 @@ const AdminSidebar = () => {
   }
 
   return (
-    <div className='bg-dark text-white sidebar'>
+    <div className={`bg-dark text-white sidebar ${className}`}>
       <div className="text-center p-3 border-bottom mb-2">
         <img src="images/cartoon-admin.jpg" alt="admin" width={80} className='img-fluid rounded-circle shadow-sm' />
         <h4 className='mt-2 mb-0'>Admin</h4>

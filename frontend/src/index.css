@@ -1,0 +1,15 @@
+/* Keep wide data tables usable on narrow screens without changing desktop layout. */
+@media (max-width: 767.98px) {
+	.table:not(.reviews-table) {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.table:not(.reviews-table) th,
+	.table:not(.reviews-table) td {
+		white-space: nowrap;
+	}
+}

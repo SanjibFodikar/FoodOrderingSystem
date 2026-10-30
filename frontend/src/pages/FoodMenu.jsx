@@ -129,7 +129,7 @@ const FoodMenu = () => {
                                 <div className="card card-food" >
                                     <div className='position-relative'>
                                         <img src={`http://127.0.0.1:8000${f.image}`} className='card-img-top' alt="image" style={{ height: "200px" }} />
-                                        <i className='fas fa-heart position-absolute rounded shadow-lg top-0 end-0 m-2 text-danger' style={{cursor:'pointer',fontSize:'20px',backgroundColor:'white',padding:'5px'}}></i>
+                                        {/* <i className='fas fa-heart position-absolute rounded shadow-lg top-0 end-0 m-2 text-danger' style={{cursor:'pointer',fontSize:'20px',backgroundColor:'white',padding:'5px'}}></i> */}
                                     </div>
                                     
                                     <div className="card-body">
